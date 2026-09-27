@@ -1,0 +1,65 @@
+---
+title: Using an AI agent
+description: Connect an AI agent to your Meridian account with an API key, and what it can and cannot do.
+---
+
+Meridian is built so an agent can work inside your account, not around it. If you already use an agent to get most of the way through business work, you can hand it the parts that need a person with a licence behind them — and keep the parts that need a human decision, human.
+
+An agent acts as **you**. It cannot see anything you cannot see, it cannot take a different path through the process, and it cannot agree to terms, pricing or delivery on your behalf.
+
+## What an agent can do
+
+- browse services and read what each one requires
+- open a service request and answer the intake questions for you
+- read a request's status, messages and outstanding documents, and follow it to delivery
+- check whether a payment has been confirmed
+- see what is scheduled and accept or decline a meeting
+- send messages on your behalf
+
+## What it cannot do
+
+Some things are deliberately out of reach, whatever the agent is told:
+
+- **Move money.** An agent can start a checkout for you to complete, or upload proof of a transfer you made. A person confirms the payment either way.
+- **Set a request's status.** A request advances when the work advances.
+- **Publish or accept a price.** The quote on your request is the price, and it comes from the provider.
+- **Change your account's role.**
+
+## Connecting an agent
+
+1. Open **Settings → API Keys** in your portal.
+2. Create a key, give it a name you will recognise, and choose how long it should live — 30 days, 90 days, one year, or no expiry.
+3. Give that key to your agent client as `Authorization: Bearer mrd_…`.
+
+Keys are listed and revocable from the same screen. **Revoking takes effect immediately** — if a key leaks, revoke it and create another.
+
+### The capability contract
+
+Every Meridian deployment publishes what it can do, in a form an agent can read:
+
+```
+GET https://your-meridian-host/api/agent/capabilities
+```
+
+It needs no key, and it lists every capability with its exact method, path, request shape and the gotchas that apply to it, plus the full list of request statuses. Point your agent at that document and it will work against your Meridian without being told anything twice.
+
+Agent-aware clients can also read `/.well-known/agent-configuration`, which advertises Meridian's supported agent authentication modes.
+
+## MCP tooling
+
+For MCP-capable clients — Claude Code, Claude Desktop, pi, Codex — Meridian publishes an MCP server, a set of agent skills, and a plugin bundle on npm. They authenticate with the same `mrd_` keys you create above, so there is nothing extra to provision.
+
+```
+@meridiantoolkit/mcp        the MCP server
+@meridiantoolkit/skills     agent skills for the Meridian API
+@meridiantoolkit/plugin     skills, commands and MCP wiring in one install
+```
+
+The MCP server builds its tool list from the capability contract at startup, so what your agent sees is exactly what your Meridian supports — not a fixed list written months ago. Every mutating call is guarded so an agent cannot quietly open a request, move money or change state without a confirmation step.
+
+## Good to know
+
+- **Give an agent the narrowest job you can.** A key is your account; revoke it when the job is done.
+- **Everything an agent does is visible to you** — in the request thread and in your notifications. There is no separate agent activity you have to go looking for.
+- **A human still decides the money.** Payment confirmation, quotes and delivery are not agent actions, by design.
+- If you want a specific client connected, tell us which one and what you are trying to automate — that is the fastest way to get it working.

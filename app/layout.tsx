@@ -5,7 +5,7 @@ import "./global.css";
 export const metadata: Metadata = {
   title: { default: "Meridian Docs", template: "%s | Meridian Docs" },
   description:
-    "How to use the Meridian platform — for customers requesting services and providers fulfilling them.",
+    "Meridian connects founders with vetted local professionals for company formation, visas, accounting and tax. How requests, quotes, payments and delivery work.",
 };
 
 /** Root layout — fumadocs provider (theme, search context). */

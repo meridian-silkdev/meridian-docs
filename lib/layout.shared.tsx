@@ -9,7 +9,7 @@ export function baseOptions(): BaseLayoutProps {
     },
     links: [
       { text: "Platform", url: "https://meridian.silkdev.com.tn" },
-      { text: "Contact", url: "mailto:contact@silkdev.com.tn" },
+      { text: "Contact", url: "mailto:contact@meridian.com" },
     ],
   };
 }
